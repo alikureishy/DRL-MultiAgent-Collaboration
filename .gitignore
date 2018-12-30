@@ -1,5 +1,6 @@
 __pycache__
 *.log
 *.zip
-Tennis/
+Tennis_Linux/
+.ipynb_checkpoints
 

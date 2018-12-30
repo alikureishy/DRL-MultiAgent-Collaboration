@@ -72,7 +72,7 @@ class PerformanceTracker(object):
             self.temporal_mean_scores[episode] = np.mean(self.score_table[episode])
             self.temporal_min_scores[episode] = np.min(self.score_table[episode])
             self.temporal_max_scores[episode] = np.max(self.score_table[episode])
-            self.temporal_score_window.append(self.temporal_mean_scores[episode])
+            self.temporal_score_window.append(self.temporal_max_scores[episode])
             self.centennial_scores[episode] = np.mean(self.temporal_score_window)
             # print("|\n")
         # else:

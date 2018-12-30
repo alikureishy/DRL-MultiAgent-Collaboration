@@ -26,7 +26,7 @@ class Trainer(object):
         self.num_agents = len(test_observation.agents)
         self.action_size = self.brain.vector_action_space_size
 
-        self.sample_state = initial_state[0]
+        self.sample_state = initial_state
 
     def describe_environment(self):
         # print (str(env))
@@ -40,16 +40,16 @@ class Trainer(object):
         print('There are {} agents. Each observes a state with length: {} and takes an action of size {}'.format(self.num_agents, self.state_size, self.action_size))
         print('Type of state space:', self.brain.vector_observation_space_type)
         print('State vector type: ', self.sample_state.shape)
-        print('The state for the first agent looks like:\n', self.sample_state)
+        print('The state for the 2 agents looks like:\n', self.sample_state)
 
     def train(self, n_episodes=1000, max_steps=1001, plot_every=5, learn_every=20, iterations_per_learn=10, goal_score=30.0):
         tracker = self.tracker_factory.createTracker(n_episodes, self.num_agents)
         agent = self.agent_factory.createAgent(self.state_size, self.action_size, self.seed, learn_every, iterations_per_learn)
-        env, observation, brain_name = self.env, self.env.reset(train_mode=True)[self.brain_name], self.brain_name
-        states = observation.vector_observations
         tracker.started_training()
         # agent.load()
         for i_episode in range(0, n_episodes):
+            env, observation, brain_name = self.env, self.env.reset(train_mode=True)[self.brain_name], self.brain_name
+            states = observation.vector_observations
             tracker.started_episode(i_episode)
             agent.reset()
             for t_step in range(0, max_steps):
