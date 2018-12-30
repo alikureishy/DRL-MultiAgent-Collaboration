@@ -42,8 +42,8 @@ class Trainer(object):
         print('State vector type: ', self.sample_state.shape)
         print('The state for the 2 agents looks like:\n', self.sample_state)
 
-    def train(self, n_episodes=1000, max_steps=1001, plot_every=5, learn_every=20, iterations_per_learn=10, goal_score=30.0):
-        tracker = self.tracker_factory.createTracker(n_episodes, self.num_agents)
+    def train(self, n_episodes=1000, max_steps=1000, plot_every=5, learn_every=20, iterations_per_learn=10, goal_score=30.0, save_every=10):
+        tracker = self.tracker_factory.createTracker(n_episodes, self.num_agents, selection='max')
         agent = self.agent_factory.createAgent(self.state_size, self.action_size, self.seed, learn_every, iterations_per_learn)
         tracker.started_training()
         # agent.load()
@@ -56,23 +56,25 @@ class Trainer(object):
                 actions = agent.act(states)
                 observation = env.step(actions)[brain_name]
                 next_states, rewards, dones = observation.vector_observations, observation.rewards, observation.local_done
-                assert next_states.shape[0] == self.num_agents, "20 agents in environment, but received only {} observation states".format(next.shape[0])
+                assert next_states.shape[0] == self.num_agents, "{} agents in environment, but received only {} observation states".format(self.num_agents, next.shape[0])
                 agent.step(states, actions, rewards, next_states, dones)
                 tracker.step(i_episode, rewards, dones)
                 states = next_states
 
                 if np.any(dones):
                     tracker.ended_episode(i_episode, print_episode_summary=True)
-                    # agent.save()
                     break
+
+            if i_episode % save_every == 0:
+                agent.save("agentrunning")
 
             # Visual feedback:
             if i_episode % plot_every == 0:
-                tracker.plot_performance()
+                tracker.plot_performance("running")
 
             # Check if goal is met:
             if (tracker.get_centennial_score() >= goal_score):
-                agent.save()
+                agent.save("agentpass")
                 print('Goal achieved! Episodes: {}, Average score (across all agents): {:.2f}, Time to train: {}min'
                         .format(i_episode, tracker.get_centennial_score(), tracker.get_training_duration()))
                 break

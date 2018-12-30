@@ -10,12 +10,12 @@ class TrackerFactory(object):
     def __init__(self):
         pass
     
-    def createTracker(self, num_episodes, num_agents):
-        return PerformanceTracker(num_episodes, num_agents)
+    def createTracker(self, num_episodes, num_agents, selection='mean'):
+        return PerformanceTracker(num_episodes, num_agents, selection)
 
 class PerformanceTracker(object):
     
-    def __init__(self, num_episodes, num_agents):
+    def __init__(self, num_episodes, num_agents, selection='mean'):
         """Constructor
         
         Params
@@ -23,6 +23,8 @@ class PerformanceTracker(object):
             num_episodes (int) : the number of episodes that are to be tracked
             num_agents (int)   : the number of agent steps being calculated in parallel
         """
+        self.selection = selection
+        self.debug = False
 
         # Scalars:
         self.num_episodes = num_episodes
@@ -43,7 +45,11 @@ class PerformanceTracker(object):
 
         # 2-D Matrices: Num_Episodes X Num_Agents
         self.score_table            = np.zeros((num_episodes, num_agents), dtype=np.float32)
-        
+
+    def debug_print(self, message, end="\n"):
+        if self.debug is True:
+            print(message, end=end)
+
     def started_training(self):
         self.training_start_time = time.time()
 
@@ -66,22 +72,28 @@ class PerformanceTracker(object):
         # Register steps & rewards:
         self.temporal_step_counts[episode] += 1
         self.score_table[episode] += rewards
+        self.debug_print(".", end="")
 
         # End-of-episode book-keeping:
         if np.any(dones):
             self.temporal_mean_scores[episode] = np.mean(self.score_table[episode])
             self.temporal_min_scores[episode] = np.min(self.score_table[episode])
             self.temporal_max_scores[episode] = np.max(self.score_table[episode])
-            self.temporal_score_window.append(self.temporal_max_scores[episode])
+            if self.selection == 'min':
+                self.temporal_score_window.append(self.temporal_min_scores[episode])
+            elif self.selection == 'mean':
+                self.temporal_score_window.append(self.temporal_mean_scores[episode])
+            elif self.selection == 'max':
+                self.temporal_score_window.append(self.temporal_max_scores[episode])
+
             self.centennial_scores[episode] = np.mean(self.temporal_score_window)
-            # print("|\n")
-        # else:
-            # if (self.step_counts[episode] % 100 == 0):
-            #     print("\n")
+            self.debug_print("|")
+        else:
+            if (self.temporal_step_counts[episode] % 100 == 0):
+                self.debug_print("")
 
     def print_episode_summary(self, episode):
         i = episode
-        # print (i, self.last_episode)
         print('\rEpisode :: {}\tScores:\tCentennial: {:.3f}\tMean: {:.3f}\tMin: {:.3f}\tMax:{:.3f}\tDuration: {:.2f}s'
                 .format(i, self.get_centennial_score(i), self.get_temporal_mean_score(i), 
                             self.get_temporal_min_score(i), self.get_temporal_max_score(i), self.get_temporal_duration(i)))
@@ -115,19 +127,19 @@ class PerformanceTracker(object):
     def get_training_duration(self):
         return self.training_duration
 
-    def plot_performance(self):
+    def plot_performance(self, fileprefix=None):
         """Plot various statistics captured by the tracker
         """
         i = self.last_episode
         if (i >= 1):
             episodes = np.arange(0, i+1) #.reshape((1, i))
-            self.__plot__("Averaged Episode Scores", episodes, "Episode", self.temporal_mean_scores[:i+1], "Score", id=311) 
-            self.__plot__("Episode Step Counts", episodes, "Episode", self.temporal_step_counts[:i+1], "# steps", id=312)
-            self.__plot__("Episode Durations", episodes, "Episode", self.temporal_durations[:i+1], "Duration (secs)", id=321)
-            self.__plot__("Centennial Averages", episodes, "Episode", self.centennial_scores[:i+1], "Score", id=322)
+            self.__plot__("Averaged Episode Scores", episodes, "Episode", self.temporal_mean_scores[:i+1], "Score", filename=fileprefix+"_averages", id=311) 
+            self.__plot__("Episode Step Counts", episodes, "Episode", self.temporal_step_counts[:i+1], "# steps", filename=fileprefix+"_stepcounts", id=312)
+            self.__plot__("Episode Durations", episodes, "Episode", self.temporal_durations[:i+1], "Duration (secs)", filename=fileprefix+"_durations", id=321)
+            self.__plot__("Centennial Averages", episodes, "Episode", self.centennial_scores[:i+1], "Score", filename=fileprefix+"_centennials", id=322)
             plt.show()
             
-    def __plot__(self, title, xs, xlabel, ys, ylabel, id=111):
+    def __plot__(self, title, xs, xlabel, ys, ylabel, filename=None, id=111):
         """Generic plot utility to plot the given values and labels
         
         Params
@@ -144,15 +156,8 @@ class PerformanceTracker(object):
         # print("Xs: ", xs.shape, "\tYs: ", ys.shape)
         ax.plot(xs, ys)
         ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
+        if filename is not None:
+            fig.savefig(filename)
+
+
 #         ax.grid()
-#         fig.savefig("test.png")
-
-
-        # last_100_scores = deque(maxlen=100)
-        # training_score_history = []                          # initialize the score (for each agent)
-        #     episode_score = 0
-        #     print("\t")
-
-        #     last_100_scores.append(episode_score)
-        #     training_score_history.append(episode_score)
-        #     last_100_scores_avg = np.mean(last_100_scores)

@@ -59,7 +59,7 @@ class Actor(nn.Module):
         # out = self.bn3(x)
         out = x
         out = self.fc3(out)
-        out = F.tanh(out)
+        out = torch.tanh(out)
         return out
 
 

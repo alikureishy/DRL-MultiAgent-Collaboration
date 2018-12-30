@@ -18,8 +18,6 @@ LR_ACTOR = 1e-3         # learning rate of the actor
 LR_CRITIC = 1e-3        # learning rate of the critic
 WEIGHT_DECAY = 0.00        # L2 weight decay
 
-FILE_NAME = "model"
-
 class AgentFactory(object):
     def __init__(self):
         pass
@@ -41,7 +39,6 @@ class DDPGAgent():
         """
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         print ("Agent is using: ", self.device)
-        self.save_file = FILE_NAME
         self.state_size = state_size
         self.action_size = action_size
         random.seed(random_seed)
@@ -66,33 +63,34 @@ class DDPGAgent():
         self.step_count = 0
         self.memory = ReplayBuffer(action_size, BUFFER_SIZE, BATCH_SIZE, random_seed, self.device)
     
-    def save(self):
+    def save(self, fileprefix):
         """Save the Q-network aprameters to the given file.
         
         Params
         ======
             checkpoint_file (string): path of the file into which to save the parameters
         """
-        torch.save(self.actor_local.state_dict(), self.save_file+"_actor_local.pth")
-        torch.save(self.actor_target.state_dict(), self.save_file+"_actor_target.pth")
-        torch.save(self.critic_local.state_dict(), self.save_file+"_critic_local.pth")
-        torch.save(self.critic_target.state_dict(), self.save_file+"_critic_target.pth")
+        assert fileprefix is not None, "Invalid 'fileprefix' was provided: {}".format(fileprefix)
+        torch.save(self.actor_local.state_dict(), fileprefix+"_actor_local.pth")
+        torch.save(self.actor_target.state_dict(), fileprefix+"_actor_target.pth")
+        torch.save(self.critic_local.state_dict(), fileprefix+"_critic_local.pth")
+        torch.save(self.critic_target.state_dict(), fileprefix+"_critic_target.pth")
 
-    # def load(self):
-    #     """Load the Q-network aprameters from the given file.
+    def load(self, fileprefix):
+        """Load the Q-network aprameters from the given file.
         
-    #     Params
-    #     ======
-    #         checkpoint_file (string): path of the file from which to load the parameters
-    #     """
-    #     if os.path.exists(self.save_file+"_actor_local.pth") is True:
-    #         self.actor_local.load_state_dict(torch.load(self.save_file+"_actor_local.pth"))
-    #         self.actor_target.load_state_dict(torch.load(self.save_file+"_actor_target.pth"))
-    #         self.critic_local.load_state_dict(torch.load(self.save_file+"_critic_local.pth"))
-    #         self.critic_target.load_state_dict(torch.load(self.save_file+"_critic_target.pth"))
-    #         print ("Checkpoint files for '{}' FOUND and loaded by agent!".format(self.save_file))
-    #     else:
-    #         print ("Checkpoint files for '{}' NOT found. Proceeding without.".format(self.save_file))
+        Params
+        ======
+            checkpoint_file (string): path of the file from which to load the parameters
+        """
+        if os.path.exists(self.save_file+"_actor_local.pth") is True:
+            self.actor_local.load_state_dict(torch.load(fileprefix+"_actor_local.pth"))
+            self.actor_target.load_state_dict(torch.load(fileprefix+"_actor_target.pth"))
+            self.critic_local.load_state_dict(torch.load(fileprefix+"_critic_local.pth"))
+            self.critic_target.load_state_dict(torch.load(fileprefix+"_critic_target.pth"))
+            print ("Checkpoint files for '{}' FOUND and loaded by agent!".format(self.save_file))
+        else:
+            print ("Checkpoint files for '{}' NOT found. Proceeding without.".format(self.save_file))
 
     def step(self, states, actions, rewards, next_states, dones):
         """Save experience in replay memory, and use random sample from buffer to learn."""
@@ -124,8 +122,6 @@ class DDPGAgent():
         return np.clip(action, -1, 1)
 
     def reset(self):
-#         torch.save(self.actor_local.state_dict(), 'checkpoint_actor.pth')
-#         torch.save(self.critic_local.state_dict(), 'checkpoint_critic.pth')
         self.noise.reset()
         # self.step_count = 0
 
@@ -155,7 +151,7 @@ class DDPGAgent():
         # Minimize the loss
         self.critic_optimizer.zero_grad()
         critic_loss.backward()
-        torch.nn.utils.clip_grad_norm(self.critic_local.parameters(), 1)
+        torch.nn.utils.clip_grad_norm_(self.critic_local.parameters(), 1)
         self.critic_optimizer.step()
 
         # ---------------------------- update actor ---------------------------- #
