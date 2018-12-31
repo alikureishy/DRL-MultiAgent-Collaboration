@@ -28,7 +28,6 @@ def main():
     tracker.plot_performance("driver")
 
 
-
 if __name__ == '__main__':
     # import cProfile
     # cp = cProfile.Profile()

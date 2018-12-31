@@ -133,10 +133,14 @@ class PerformanceTracker(object):
         i = self.last_episode
         if (i >= 1):
             episodes = np.arange(0, i+1) #.reshape((1, i))
-            self.__plot__("Averaged Episode Scores", episodes, "Episode", self.temporal_mean_scores[:i+1], "Score", filename=fileprefix+"_averages", id=311) 
-            self.__plot__("Episode Step Counts", episodes, "Episode", self.temporal_step_counts[:i+1], "# steps", filename=fileprefix+"_stepcounts", id=312)
-            self.__plot__("Episode Durations", episodes, "Episode", self.temporal_durations[:i+1], "Duration (secs)", filename=fileprefix+"_durations", id=321)
-            self.__plot__("Centennial Averages", episodes, "Episode", self.centennial_scores[:i+1], "Score", filename=fileprefix+"_centennials", id=322)
+            self.__plot__("Averaged Episode Scores", episodes, "Episode", self.temporal_mean_scores[:i+1], "Score", 
+                            filename=fileprefix+"_averages" if fileprefix is not None else None, id=311) 
+            self.__plot__("Episode Step Counts", episodes, "Episode", self.temporal_step_counts[:i+1], "# steps", 
+                            filename=fileprefix+"_stepcounts" if fileprefix is not None else None, id=312)
+            self.__plot__("Episode Durations", episodes, "Episode", self.temporal_durations[:i+1], "Duration (secs)", 
+                            filename=fileprefix+"_durations" if fileprefix is not None else None, id=321)
+            self.__plot__("Centennial Averages", episodes, "Episode", self.centennial_scores[:i+1], "Score", 
+                            filename=fileprefix+"_centennials" if fileprefix is not None else None, id=322)
             plt.show()
             
     def __plot__(self, title, xs, xlabel, ys, ylabel, filename=None, id=111):
