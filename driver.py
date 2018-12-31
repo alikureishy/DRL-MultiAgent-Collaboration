@@ -27,8 +27,6 @@ def main():
     print("Training performance")
     tracker.plot_performance("driver")
 
-    time.sleep(5)
-
 
 
 if __name__ == '__main__':

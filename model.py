@@ -25,6 +25,8 @@ class Actor(nn.Module):
         super(Actor, self).__init__()
         self.seed = torch.manual_seed(seed)
 
+        self.dropout = nn.Dropout(p=0.2)
+
         # Layer 1
         self.fc1 = nn.Linear(state_size, fc1_units)
         self.bn1 = nn.BatchNorm1d(fc1_units)
@@ -53,6 +55,7 @@ class Actor(nn.Module):
 
         x = self.fc2(x)
         x = F.relu(x)
+        x = self.dropout(x)
 
         # tanh produces a real-valued output R[-1, +1] that allows 
         # continuous action spaces

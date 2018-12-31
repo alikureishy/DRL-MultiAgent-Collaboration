@@ -102,8 +102,8 @@ class DDPGAgent():
         self.step_count += 1
 
         assert len(states.shape) >= 2, "Expected a state vector of at least 2 dimensions, but was only {} dimensions ({})".format(len(states.shape), states.shape)
-        states = self.feature_extractor.extract(states)
-        next_states = self.feature_extractor.extract(next_states)
+        states = self.feature_extractor.extract_states(states)
+        next_states = self.feature_extractor.extract_states(next_states)
         for state, action, reward, next_state, done in zip(states, actions, rewards, next_states, dones):
             self.memory.add(state, action, reward, next_state, done)
 
@@ -115,7 +115,7 @@ class DDPGAgent():
 
     def act(self, states, add_noise=True):
         """Returns actions for given states as per current policy."""
-        states = self.feature_extractor.extract(states)
+        states = self.feature_extractor.extract_states(states)
         states = torch.from_numpy(states).float().to(self.device)
         self.actor_local.eval()
         with torch.no_grad():
