@@ -2,17 +2,15 @@
 [//]: # (Image References)
 
 [Trained-Agents]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/tennis.png "Trained Agents"
-[Episode-Averages]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/averages.png "Episode Averages (across 20 agents)"
+[Episode-Averages]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/averages.png "Episode Averages"
 [Centennial-Averages]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/centennials.png "Average score over 100 episodes"
 [Episode-Step-Counts]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/stepcounts.png "Episode step counts"
 [Episode-Durations]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/durations.png "Episode durations"
 
 
-# Continuous Control -- Ball Controlling Arm
+# Collaborative Multi-Agents -- Tennis
 
-|                           Before Training (Click for video)           |                    After Training (Click for video)                            |
-|-----------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| [![Untrained Agents][Untrained-Agents]](https://youtu.be/pqazTPNGX00)     | [![Trained Agents][Trained-Agents]](https://www.youtube.com/watch?v=7JU78k4TH-A)           
+[![Trained Agents][Trained-Agents]](https://www.youtube.com/watch?v=7JU78k4TH-A)
 
 ## Overview
 
@@ -20,7 +18,7 @@ Multi-agent games involve 3 possible environments -- competitive, collaborative 
 
 ## Environment
 
-As mentioned in README.md, the environment being worked in here is of [Tennis](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#reacher).
+As mentioned in README.md, the environment being worked in here is of [Tennis](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#tennis).
 
 In this environment, 2 agents are playing tennis *with* each other, and are collaborating because their individual rewards and punishments are ultimately scored as a team. For any player that hits the ball back into the other court, the reward given is a +0.1. For missing a ball, or hitting it out of bounds, the punishment is a -0.05. At the end of the game, the 2 agents are scored as a team, with the score being the maximum of their individual scores. The goal of the trained agents is to maximize their team score, the strategy for which involves keeping the ball in play for as many steps as possible.
 
@@ -88,7 +86,7 @@ The Critic is a neural network that learns the value-based function (low varianc
 
 I have added 2 regularization techniques to help overcome the limitations of a single-agent learning algorithm -- in this case, the DDPG algorithm.
 
-###### Data Augmentation - Observation Disambiguation
+###### Data Augmentation - Observation Disambiguation (feature_extractor.py)
 
 Instead of using a purely multi-agent algorithm (such as MADDPG), I chose instead to tweak the DDPG agorithm itself, to suit this particular multi-agent environment. This solution may not, however, work forevery multi-agent scenario.
 
@@ -115,6 +113,7 @@ Player 2:
 This data augmentation serves as a regularization that allows the system to correlate the conflicting learning examples to that first element, allowing the network to learn 2 different behaviors for seemingly similar observations, based on the value of that first element. This was a crucial choice for this learning algorithm.
 
 ###### Network Dropouts
+
 An important element in both the Actor and Critic networks was a Dropout (with probability of 0.2), after the hidden layer, to help the networks generalize better. This regularization technique was a necessary addition to the data augmentation done above, because, intuitively, it allowed the agent to better utilize that disambiguating element above, with learning that was generalized over the remaining 24 observation elements, since those 24 elements would have to serve 2 different purposes, using the first element as the "switch", so-to-speak.
 
 ## Training
