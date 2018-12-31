@@ -12,6 +12,34 @@
 
 [![Trained Agents][Trained-Agents]](https://www.youtube.com/watch?v=7JU78k4TH-A)
 
+- [Collaborative Multi-Agents -- Tennis](#collaborative-multi-agents----tennis)
+  - [Overview](#overview)
+  - [Environment](#environment)
+    - [Action Space](#action-space)
+    - [Observation Space](#observation-space)
+    - [Goal](#goal)
+  - [Design](#design)
+    - [Driver (driver.py)](#driver-driverpy)
+    - [Trainer (trainer.py)](#trainer-trainerpy)
+    - [Tracker (tracker.py)](#tracker-trackerpy)
+    - [Agent (agent.py)](#agent-agentpy)
+      - [Actor & Critic Networks (model.py)](#actor--critic-networks-modelpy)
+        - [Regularization](#regularization)
+          - [Data Augmentation - Observation Disambiguation (feature_extractor.py)](#data-augmentation---observation-disambiguation-featureextractorpy)
+          - [Network Dropouts](#network-dropouts)
+  - [Training](#training)
+    - [Hyperparameters](#hyperparameters)
+  - [Results](#results)
+    - [Average Agent Scores](#average-agent-scores)
+    - [Running 100-episode averages](#running-100-episode-averages)
+    - [Episode step counts](#episode-step-counts)
+    - [Episode duration](#episode-duration)
+  - [Future Enhancements](#future-enhancements)
+    - [Prioritized experience replay](#prioritized-experience-replay)
+    - [Better Tooling](#better-tooling)
+    - [Better GPU utilization](#better-gpu-utilization)
+    - [Exploring model-free agents better suited for multi-agent environments](#exploring-model-free-agents-better-suited-for-multi-agent-environments)
+
 ## Overview
 
 Multi-agent games involve 3 possible environments -- competitive, collaborative and mixed. The motivation for this project was to implement a reinforcement learning algorithm in a continuous state-space and continuous action-space wherein two agents are playing *collaboratively*.
