@@ -165,7 +165,7 @@ The following hyperparameters were used:
 
 ## Results
 
-As the graphs below illustrate, the agent learned the problem space pretty well, achieving the goal score in a little over 100 episodes. See [here](https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/training.log) for the training log.
+As the graphs below illustrate, the agent learned the problem space pretty well, achieving the goal score in 364 episodes. See [here](https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/training.log) for the training log.
 
 ### Average Agent Scores
 
