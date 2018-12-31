@@ -18,7 +18,8 @@ class DisambiguatingFeatureExtractor(object):
         pass
 
     def estimate_state_size(self, original_size):
-        return original_size + 1
+        # return original_size + 1
+        return original_size
 
     """
         The extractor essentially appends a column
@@ -29,7 +30,8 @@ class DisambiguatingFeatureExtractor(object):
         each such perspective.
     """
     def extract(self, observations):
-        n = observations.shape[0]
-        ids = np.arange(0, n).reshape((n,1))
-        new_states = np.hstack((ids, observations))
-        return new_states
+        # n = observations.shape[0]
+        # ids = np.arange(0, n).reshape((n,1))
+        # new_states = np.hstack((ids, observations))
+        # return new_states
+        return observations

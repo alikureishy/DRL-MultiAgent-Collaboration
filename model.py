@@ -12,7 +12,7 @@ def hidden_init(layer):
 class Actor(nn.Module):
     """Actor (Policy) Model."""
 
-    def __init__(self, state_size, action_size, seed, fc1_units=400, fc2_units=300):
+    def __init__(self, state_size, action_size, seed, fc1_units=512, fc2_units=256):
         """Initialize parameters and build model.
         Params
         ======
@@ -66,7 +66,7 @@ class Actor(nn.Module):
 class Critic(nn.Module):
     """Critic (Value) Model."""
 
-    def __init__(self, state_size, action_size, seed, fc1_units=400, fc2_units=300, reward_size=1):
+    def __init__(self, state_size, action_size, seed, fc1_units=512, fc2_units=256, reward_size=1):
         """Initialize parameters and build model.
             For Q-values, we need both the state and the action.
             That (state-action) pair is obtained after the state is put through
@@ -83,6 +83,8 @@ class Critic(nn.Module):
         """
         super(Critic, self).__init__()
         self.seed = torch.manual_seed(seed)
+
+        self.dropout = nn.Dropout(p=0.2)
 
         # Layer 1
         self.fc1 = nn.Linear(state_size, fc1_units)
@@ -119,6 +121,7 @@ class Critic(nn.Module):
         x = torch.cat((state, action), dim=1)
         x = self.fc2(x)
         x = F.relu(x)
+        x = self.dropout(x)
 
         # The value-function is a real-valued number that is no constrained
         # any range, as is the case for continuous action selection.

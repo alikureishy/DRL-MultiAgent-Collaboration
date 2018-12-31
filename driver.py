@@ -14,7 +14,7 @@ def main():
     trainer = Trainer(env, agent_factory, tracker_factory)
     trainer.describe_environment()
     time.sleep(5)
-    agent, tracker = trainer.train(n_episodes=2000, plot_every=3000, learn_every=10, iterations_per_learn=10, save_every=1000, goal_score=0.5)
+    agent, tracker = trainer.train(n_episodes=2000, plot_every=3000, learn_every=10, iterations_per_learn=10, goal_score=0.5, save_every=100)
     print("Training complete!")
     time.sleep(5)
 
@@ -25,7 +25,7 @@ def main():
     print("Game finished!")
 
     print("Training performance")
-    tracker.plot_performance()
+    tracker.plot_performance("driver")
 
     time.sleep(5)
 

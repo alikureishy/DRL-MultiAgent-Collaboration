@@ -1,6 +1,5 @@
 __pycache__
-*.log
 *.zip
 Tennis_Linux/
 .ipynb_checkpoints
-
+unity-environment.log
