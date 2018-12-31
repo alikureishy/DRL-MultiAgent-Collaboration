@@ -1,13 +1,11 @@
 
 [//]: # (Image References)
 
-[Untrained-Agents]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/UntrainedAgents.png "Untrained Agent"
-[Training-Process]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/Training.png "Training"
-[Trained-Agents]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/TrainedAgents.png "Trained Agent"
-[Episode-Averages]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/Averages.png "Episode Averages (across 20 agents)"
-[Centennial-Averages]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/Centennials.png "Average score over 100 episodes"
-[Episode-Step-Counts]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/StepCounts.png "Episode step counts"
-[Episode-Durations]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/Durations.png "Episode durations"
+[Trained-Agents]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/tennis.png "Trained Agents"
+[Episode-Averages]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/averages.png "Episode Averages (across 20 agents)"
+[Centennial-Averages]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/centennials.png "Average score over 100 episodes"
+[Episode-Step-Counts]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/stepcounts.png "Episode step counts"
+[Episode-Durations]: https://github.com/safdark/DRL-MultiAgent-Collaboration/blob/master/docs/img/durations.png "Episode durations"
 
 
 # Continuous Control -- Ball Controlling Arm
@@ -101,17 +99,17 @@ More specifically, since state observations received by the system at each step 
 ```
 Player 1:
 [ *0.*          <-------------- First Player
-   0.          0.          0.          0.          0.          0.
    1.          0.          0.          0.          0.          0.
-   2.          0.          0.          0.         -6.65278625 -1.5
+   2.          0.          0.          0.          0.          0.
+   3.          0.          0.          0.         -6.65278625 -1.5
   -0.          0.          6.83172083  6.         -0.          0.        ]
 
 Player 2:
  [ *1.*         <-------------- Second Player
-   0.          0.          0.          0.          0.          0.
    1.          0.          0.          0.          0.          0.
-   2.          0.          0.          0.         -6.4669857  -1.5
-   3.          0.         -6.83172083  6.          0.          0.        ]
+   2.          0.          0.          0.          0.          0.
+   3.          0.          0.          0.         -6.4669857  -1.5
+   4.          0.         -6.83172083  6.          0.          0.        ]
 ```
 
 This data augmentation serves as a regularization that allows the system to correlate the conflicting learning examples to that first element, allowing the network to learn 2 different behaviors for seemingly similar observations, based on the value of that first element. This was a crucial choice for this learning algorithm.
