@@ -189,9 +189,7 @@ Given the specifics of game play here, this makes perfect sense, since higher sc
 
 There are 2 factors at play here, when we see the episode durations:
 1) The number of steps that the agents keep the ball in play (whose average is increasing), AND
-2) The consumption of the replay buffer, which 
-
-The time it took to complete each episode seems to have constantly risen through the training. The culprit here is most likely to be the sampling efficiency (or inefficiency) that (understandably) is linearly correlated with the length of the sample pool (O(n) runtime). In the case of the agent, its replay buffer is set to a size of 1e6 (=1,000,000 entries). As the agents gains experience, this replay buffer gets increasingly filled with experience tuples, until the ~50th episode, at which point the replay buffer would contain 50*1000*20 = exactly 1,000,000 entries! The 'Episode Duration' graph above supports this hypothesis, since the episode runtime hits a plateau at ~50th episode, after which it is maintained (since the buffer will not grow past 1,000,000 entries). 
+2) The consumption of the replay buffer, which is sampled from, since sampling time is linearly correlated with the length of the sample pool ( (O(n) runtime ). 
 
 ![Episode Step-Counts][Episode-Durations]
 
