@@ -169,7 +169,7 @@ As the graphs below illustrate, the agent learned the problem space pretty well,
 
 ### Average Agent Scores
 
-The average scores for the 2-person team, at the end of each episode, are plotted here. Note how the learning is slow until episode ____, after which the learning is more productive and get the team to as high a score as ____.
+The average scores for the 2-person team, at the end of each episode, are plotted here. Note how the learning is slow until episode 235, after which the agents begin to learn faster, attaining a max score of ~3.0 -- that's keeping the ball in play for 30 to-fro returns!
 
 ![Average Scores][Episode-Averages]
 
